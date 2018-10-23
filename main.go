@@ -2,32 +2,20 @@ package main
 
 import (
 	"encoding/xml"
-	"flag"
 	"fmt"
 	"io"
 	"log"
 	"os"
 
+	"github.com/urfave/cli"
 	"golang.org/x/net/html/charset"
 )
 
-func main() {
-	inputfile := flag.String("i", "", "input nxr file")
-	outputfile := flag.String("o", "", "output nxr file")
-
-	flag.Parse()
-
-	if *inputfile == "" {
-		*inputfile = "housemodel.nxr"
-	}
-	if *outputfile == "" {
-		*outputfile = *inputfile + ".out"
-	}
-
-	fi, _ := os.Open(*inputfile)
+func formatCommand(input string, output string) {
+	fi, _ := os.Open(input)
 	defer fi.Close()
 
-	fo, _ := os.Create(*outputfile)
+	fo, _ := os.Create(output)
 	defer fo.Close()
 
 	decoder := xml.NewDecoder(fi)
@@ -58,4 +46,41 @@ func main() {
 	}
 
 	encoder.Flush()
+}
+
+func main() {
+	app := cli.NewApp()
+	app.Name = "nxrfmt"
+	app.Usage = "nxr formatter"
+	app.Author = "HARADA Takashi"
+	app.Version = "0.1.0"
+	app.Flags = []cli.Flag{
+		cli.StringFlag{
+			Name:  "input, i",
+			Usage: "input file",
+			Value: "",
+		},
+		cli.StringFlag{
+			Name:  "output, o",
+			Usage: "output file",
+		},
+	}
+
+	app.Action = func(c *cli.Context) error {
+		input := c.String("input")
+		if input == "" {
+			cli.ShowAppHelpAndExit(c, 1)
+		}
+		output := c.String("output")
+		if output == "" {
+			output = input + ".out"
+		}
+
+		formatCommand(input, output)
+
+		return nil
+	}
+	if err := app.Run(os.Args); err != nil {
+		log.Fatal(err)
+	}
 }
