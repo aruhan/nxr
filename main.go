@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/xml"
+	"flag"
 	"fmt"
 	"io"
 	"log"
@@ -11,10 +12,22 @@ import (
 )
 
 func main() {
-	fi, _ := os.Open("housemodel.nxr")
+	inputfile := flag.String("i", "", "input nxr file")
+	outputfile := flag.String("o", "", "output nxr file")
+
+	flag.Parse()
+
+	if *inputfile == "" {
+		*inputfile = "housemodel.nxr"
+	}
+	if *outputfile == "" {
+		*outputfile = *inputfile + ".out"
+	}
+
+	fi, _ := os.Open(*inputfile)
 	defer fi.Close()
 
-	fo, _ := os.Create("convert.xml")
+	fo, _ := os.Create(*outputfile)
 	defer fo.Close()
 
 	decoder := xml.NewDecoder(fi)
