@@ -17,7 +17,7 @@ jobs:
     #### expecting it in the form of
     ####   /go/src/github.com/circleci/go-tool
     ####   /go/src/bitbucket.org/circleci/go-tool
-    working_directory: /go/src/github.com/aruhanb/nxr
+    working_directory: /go/src/github.com/aruhan/nxr
     steps:
       - checkout
 
@@ -26,4 +26,4 @@ jobs:
       - run: go test -v ./...
       - run:
           name: Build
-          command: go build -v cmd/nxr
+          command: go build -v ./cmd/nxr
