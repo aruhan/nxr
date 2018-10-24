@@ -1,4 +1,6 @@
-[![CircleCI](https://circleci.com/gh/aruhan/nxr.svg?style=svg)](https://circleci.com/gh/aruhan/nxr)
+nxr
+===
 
-# nxr
+ [![CircleCI](https://circleci.com/gh/aruhan/nxr.svg?style=shield)](https://circleci.com/gh/aruhan/nxr)
+
 nxr cli tool
