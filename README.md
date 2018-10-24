@@ -1,2 +1,2 @@
-# nxrfmt
-nxr formatter
+# nxr
+nxr cli tool
