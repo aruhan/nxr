@@ -1,14 +1,11 @@
 package main
 
 import (
-	"encoding/xml"
-	"fmt"
-	"io"
 	"log"
 	"os"
 
+	"github.com/aruhan/nxr"
 	"github.com/urfave/cli"
-	"golang.org/x/net/html/charset"
 )
 
 func main() {
@@ -64,32 +61,9 @@ func doFormatCommand(input string, output string) {
 	fo, _ := os.Create(output)
 	defer fo.Close()
 
-	decoder := xml.NewDecoder(fi)
-	charsetReader := func(label string, input io.Reader) (io.Reader, error) {
-		fmt.Printf("Input charset = %s\n", label)
-		return charset.NewReaderLabel(label, input)
+	err := nxr.FormatXML(fi, fo)
+	if err != nil {
+		log.Fatal(err)
+		return
 	}
-	decoder.CharsetReader = charsetReader
-
-	encoder := xml.NewEncoder(fo)
-	encoder.Indent("", "  ")
-
-	for {
-		tok, err := decoder.Token()
-		if err == io.EOF {
-			break
-		} else if err != nil {
-			log.Fatal(err)
-			return
-		}
-
-		switch tok.(type) {
-		case xml.ProcInst:
-			encoder.EncodeToken(xml.ProcInst{Target: "xml", Inst: []byte(`version="1.0" charset="utf-8"`)})
-		default:
-			encoder.EncodeToken(tok)
-		}
-	}
-
-	encoder.Flush()
 }
