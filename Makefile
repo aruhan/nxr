@@ -5,3 +5,5 @@ build:
 
 run:
 	$(GOCMD) run -v ./cmd/nxr
+
+.PHONY: clean build run
